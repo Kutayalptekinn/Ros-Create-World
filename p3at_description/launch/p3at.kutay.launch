@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="x" default="-8.065846"/>
+  <arg name="y" default="8.195312"/>
+  <arg name="z" default="3.014245"/>
+<!-- Gazebo -->
+
+<include file="$(find gazebo_ros)/launch/empty_world.launch">
+<arg name="world_name" default="$(find nre_p3at)/worlds/yasir.world"/>
+  <arg name="paused" value="false"/>
+  <arg name="use_sim_time" value="true"/>
+  <arg name="gui" value="true"/>
+  <arg name="headless" value="false"/>
+  <arg name="debug" value="false"/>
+</include>
+
+<!-- Use URDF model from AMR -->  
+
+<arg name="urdf" default="$(find nre_p3at)/urdf/pioneer3at.urdf.xacro" />
+<param name="robot_description" command="$(find xacro)/xacro $(arg urdf)" />
+<arg name="name" default="pioneer3at" />
+<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model $(arg name) -x $(arg x) -y $(arg y) -z $(arg z)" />
+<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+</launch>
